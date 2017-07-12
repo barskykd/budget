@@ -1,9 +1,11 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
+import * as Decimal from 'decimal.js'
 
 type InplaceInputProps = {
     value: string,
-    onChange: (value:string) => void
+    onChange: (value:string) => void,
+    inputType?: string
 };
 
 type InplaceInputState = {
@@ -21,17 +23,20 @@ class InplaceInput extends React.Component<InplaceInputProps, InplaceInputState>
         if (!prevState.editing && this.state.editing) {
             var node = ReactDOM.findDOMNode<HTMLInputElement>(this.refs["editField"]);
             node.focus();
-            node.setSelectionRange(0, node.value.length);
+            if (!this.props.inputType) {
+                node.setSelectionRange(0, node.value.length);
+            }
+            
         }     
     }
 
     render() {
         if (!this.state.editing) {
             return <span className="inplace-input_notediting" onClick={e => this.startEditing()}>
-                {this.props.value}
+                {this.props.value}&nbsp;
             </span>
         } else {
-            return <input ref="editField" value={this.state.newValue} 
+            return <input ref="editField" value={this.state.newValue} type={this.props.inputType}
                 onBlur={e => this.endEditing()}
                 onChange={e => this.setState({newValue: e.target.value})}
                 onKeyUp = {e => this.onKeyUp(e)}
@@ -65,3 +70,33 @@ class InplaceInput extends React.Component<InplaceInputProps, InplaceInputState>
 }
 
 export default InplaceInput
+
+function toMoney(value: string) {
+    try {
+        let amount = new Decimal(value || '0.00').toFixed(2);
+        return amount;
+    } catch (e) {
+        if (e.message.startsWith('[DecimalError]')) {
+            // all ok. Just invalid number as input.
+        } else {
+            throw e;
+        }            
+    }   
+}
+
+export class MoneyInput extends React.Component<InplaceInputProps, {}> {
+    render () {
+        let newProps: InplaceInputProps = {
+            ...this.props,
+            value: toMoney(this.props.value) || '0.00',
+            onChange: (value: string) => {
+                let newValue = toMoney(value);
+                if (newValue !== undefined) {
+                    this.props.onChange(newValue)
+                }
+            }
+        }
+        console.log('newProps', newProps);
+        return React.createElement(InplaceInput, newProps);
+    }
+}
