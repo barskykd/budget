@@ -32,12 +32,15 @@ export type Goal = {
     amount: string
 }
 
+export type LoadingState = "LOADED" | "LOADING" | "LOADINGERROR";
+
 export type State = {
     accounts: Account[],
     envelopes: Envelope[],
     monthlies: Monthly[],
     goals: Goal[]
-    loggedInDropbox: boolean    
+    loggedInDropbox: boolean ,
+    loadingState: LoadingState
 }
 
 export const getAccountTotals = createSelector(

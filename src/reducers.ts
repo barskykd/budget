@@ -140,10 +140,23 @@ export function loggedInDropbox(state: boolean, action: Action): boolean {
     return state || false;
 }
 
+function loadingState(state: Model.LoadingState, action: Action): Model.LoadingState {
+    if (!state) {
+        state = "LOADING"
+    }
+    switch (action.type) {
+        case 'DATA_LOADED':
+            return "LOADED"
+        default:
+            return state;
+    }
+}
+
 export default combineReducers<Model.State>({
         accounts,
         loggedInDropbox,
         envelopes,
         monthlies,
-        goals
+        goals,
+        loadingState,
     });

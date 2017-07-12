@@ -26,7 +26,8 @@ let redux_store = createStore<Model.State>(Reducers, {
     envelopes: [],
     monthlies: [],
     goals: [],
-    loggedInDropbox: dbx.loggedIn()
+    loggedInDropbox: dbx.loggedIn(),
+    loadingState: "LOADING"
 }, applyMiddleware(MiddleWare))
 
 interface WithId {
@@ -107,6 +108,9 @@ class App extends React.Component<AppProps, {}> {
             return <ReactModal isOpen={true} contentLabel="Log in">
                 <a id="login_link" href={dbx.auth_url()}>Login to dropbox</a>
             </ReactModal >
+        }
+        if (this.props.data.loadingState == "LOADING") {
+            return <div className="load-indicator"><img src="spinner.gif"/></div>
         }
         return <div>
                 <div className="page-header">
