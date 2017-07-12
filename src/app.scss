@@ -89,23 +89,41 @@ h1 {
     margin: auto;
 }
 
-.accounts {
+.default-card {
     box-shadow: 0 0 10px rgba(0,0,0,0.5);
     margin: 8px;
     padding: 8px;
 }
 
-.accounts-table {
+.default-card-table {
     width: 100%;
-    border-collapse: collapse; 
-}
+    border-collapse: collapse;
 
-.accounts-table > tbody > tr > td {
+    > tbody > tr > td {
     padding: 4px;
+    }
+
+    > tbody > tr:nth-child(odd) {
+    background-color: rgba(204, 204, 204, 0.4);
+    }
 }
 
-tbody tr:nth-child(odd) {
-   background-color: rgba(204, 204, 204, 0.4);
+.default-card-table-total {
+    > td {
+        border-top: 1px solid rgba(0,0,0,0.4);
+    }
+}
+
+.accounts {
+    @extend .default-card    
+}
+
+.accounts-table {
+    @extend .default-card-table    
+}
+
+.accounts-table-total {
+    @extend .default-card-table-total
 }
 
 .accounts-table-account {
@@ -116,37 +134,38 @@ tbody tr:nth-child(odd) {
     width: 60px;
 }
 
-.accounts-table-total > td {
-    border-top: 1px solid rgba(0,0,0,0.4);
-}
-
 .envelopes {
-    box-shadow: 0 0 10px rgba(0,0,0,0.5);
-    margin: 8px;
-    padding: 8px;
+    @extend .default-card  
 }
 
 .envelopes-table {
-    width: 100%;
-    border-collapse: collapse; 
+    @extend .default-card-table
 }
 
-.envelopes-table > tbody > tr > td {
-    padding: 4px;
+.envelopes-table-total {
+    @extend .default-card-table-total
 }
 
-.envelopes-table-total > td {
-    border-top: 1px solid rgba(0,0,0,0.4);
+.monthlies {
+    @extend .default-card  
 }
 
-.monthilies {
-    box-shadow: 0 0 10px rgba(0,0,0,0.5);
-    margin: 8px;
-    padding: 8px;
+.monthlies-table {
+    @extend .default-card-table
+}
+
+.monthlies-table-total {
+    @extend .default-card-table-total
 }
 
 .goals {
-    box-shadow: 0 0 10px rgba(0,0,0,0.5);
-    margin: 8px;
-    padding: 8px;
+    @extend .default-card  
+}
+
+.goals-table {
+    @extend .default-card-table
+}
+
+.goals-table-total {
+    @extend .default-card-table-total
 }

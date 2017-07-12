@@ -27,9 +27,9 @@ type MonthliesProps = {
 }
 
 function Monthlies (props: MonthliesProps) {
-    return <div className="monthilies">
+    return <div className="monthlies">
         <div className="header">Montly spendings</div>
-        <table>
+        <table className="monthlies-table">
             <thead>
                 <tr>
                     <td>Monthly spending</td>
@@ -41,7 +41,7 @@ function Monthlies (props: MonthliesProps) {
                 {props.monthlies.map(x => <MonthlyItem key={x.id} monthly={x}/>)}            
             </tbody>
             <tfoot>
-                <tr>
+                <tr className="monthlies-table-total">
                     <td>Total</td>
                     <td>{props.monthlies.reduce((pv, cv)=>pv.plus(cv.defaultAmount), new Decimal(0)).toFixed(2)}</td>
                     <td>{props.monthlies.reduce((pv, cv)=>pv.plus(cv.amount), new Decimal(0)).toFixed(2)}</td></tr>

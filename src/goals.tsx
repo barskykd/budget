@@ -61,7 +61,7 @@ type GoalListProps = {
 function GoalList(props: GoalListProps) {
     return <div className="goals">
         <div className="header">Goals</div>                    
-        <table>
+        <table className="goals-table">
             <thead>
                 <tr>
                     <td>Goal</td>
@@ -76,7 +76,7 @@ function GoalList(props: GoalListProps) {
                 {props.goals.map(x => <GoalListItem key={x.id} goal={x}/>)}
             </tbody>
             <tfoot>
-                <tr>
+                <tr className="goals-table-total">
                     <td>Total</td>
                     <td></td>
                     <td></td>
