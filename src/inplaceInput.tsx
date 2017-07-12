@@ -5,7 +5,8 @@ import * as Decimal from 'decimal.js'
 type InplaceInputProps = {
     value: string,
     onChange: (value:string) => void,
-    inputType?: string
+    inputType?: string,
+    className?: string
 };
 
 type InplaceInputState = {
@@ -32,7 +33,8 @@ class InplaceInput extends React.Component<InplaceInputProps, InplaceInputState>
 
     render() {
         if (!this.state.editing) {
-            return <span className="inplace-input_notediting" onClick={e => this.startEditing()}>
+            let classNames = `inplace-input_notediting ${this.props.className || ''}`;            
+            return <span className={classNames} onClick={e => this.startEditing()}>
                 {this.props.value}&nbsp;
             </span>
         } else {
@@ -89,6 +91,7 @@ export class MoneyInput extends React.Component<InplaceInputProps, {}> {
         let newProps: InplaceInputProps = {
             ...this.props,
             value: toMoney(this.props.value) || '0.00',
+            className: 'moneyinput',
             onChange: (value: string) => {
                 let newValue = toMoney(value);
                 if (newValue !== undefined) {

@@ -22,10 +22,10 @@ function MonthlyItem(props: MonthlyItemProps) {
             <InplaceInput value={props.monthly.title} onChange={v => props.onChange({title: v})}/>            
         </td>
         <td>
-            <InplaceInput value={props.monthly.defaultAmount} onChange={v => props.onChange({defaultAmount: v})}/> 
+            <MoneyInput value={props.monthly.defaultAmount} onChange={v => props.onChange({defaultAmount: v})}/> 
         </td>
         <td>
-            <InplaceInput value={props.monthly.amount} onChange={v => props.onChange({amount: v})}/> 
+            <MoneyInput value={props.monthly.amount} onChange={v => props.onChange({amount: v})}/> 
         </td>
         <td><button>Assign default</button></td>
         <td><button>Spent</button></td>        

@@ -6,6 +6,7 @@ import * as Decimal from 'decimal.js'
 import * as Model from './model';
 import * as Actions from './actions';
 import InplaceInput from './inplaceinput';
+import {MoneyInput} from './inplaceinput';
 import InlineConfirmation from './InlineConfirmation'
 import {isValidDecimal} from './decimal_ext';
 
@@ -33,21 +34,16 @@ class Account extends React.Component<AccountProps, AccountState>
                     />                                                      
                 : <button onClick={()=> this.setState({isDeleting: true})}>&times;</button>
                                             
-        return <tr className="accounts_account">
+        return <tr>
             <td><InplaceInput 
                     value={this.props.account.title} 
                     onChange={(value:string)=>this.props.onChange({title: value})}
                 /></td>
-            <td><InplaceInput 
-                    value={this.props.account.balance.toString()} 
-                    onChange={(value)=>{
-                        if (isValidDecimal(value)) {
-                            value = new Decimal(value).toFixed(2);
-                            this.props.onChange({balance: value});
-                        }
-                    }}
+            <td><MoneyInput 
+                    value={this.props.account.balance} 
+                    onChange={(value)=>this.props.onChange({balance: value})}
                 /></td>            
-            <td className="accounts-table-buttons">{deleteButton}</td>
+            <td>{deleteButton}</td>
             </tr>
     }
 }
@@ -76,10 +72,15 @@ class Accounts extends React.Component<AccountsProps, AccountsState>
         return <div className="accounts">
             <div className="header">Accounts</div>
             <table className="accounts-table">
+                <colgroup>
+                    <col className="account-table-account"/>
+                    <col className="account-table-balance"/>
+                    <col className="account-table-buttons"/>
+                </colgroup>
                 <thead><tr>
-                    <td className="accounts-table-account">Account</td>
-                    <td className="accounts-table-balance">Balance</td>
-                    <td className="accounts-table-buttons"></td></tr></thead>
+                    <td>Account</td>
+                    <td>Balance</td>
+                    <td></td></tr></thead>
                 <tbody>
                 {this.props.accounts.map(x => <Account key={x.id} account={x} onChange={(account)=>{
                         this.props.updateAccount({...account, id:x.id});

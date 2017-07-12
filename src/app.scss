@@ -109,8 +109,10 @@ h1 {
     width: 100%;
     border-collapse: collapse;
 
-    > tbody > tr > td {
-    padding: 4px;
+    > tbody, thead, tfoot {
+        > tr > td {
+            padding: 4px;
+        }
     }
 
     > tbody > tr:nth-child(odd) {
@@ -129,20 +131,27 @@ h1 {
 }
 
 .accounts-table {
-    @extend .default-card-table    
+    @extend .default-card-table;    
+
+    > tbody, thead, tfoot {
+        > tr {
+            > td:nth-child(1) {
+                width: 50%;
+            }
+            > td:nth-child(2) {
+                text-align: right;
+                //border: 1px solid rgba(0,0,0,0);
+            }
+            > td:nth-child(3) {
+                max-width: 80px;
+                text-align: right;
+            }
+        }
+    }
 }
 
 .accounts-table-total {
     @extend .default-card-table-total
-}
-
-.accounts-table-account {
-    width: 50%;
-}
-
-.accounts-table-buttons {
-    max-width: 80px;
-    text-align: right;
 }
 
 .envelopes {
@@ -150,24 +159,31 @@ h1 {
 }
 
 .envelopes-table {
-    @extend .default-card-table
+    @extend .default-card-table;
+    > thead, tbody, tfoot { 
+        > tr {
+            > td:nth-child(1) {
+                width: 110px;
+            }
+            > td:nth-child(2) {
+                width: 50%;
+                text-align: right;
+                //border: 1px solid rgba(0,0,0,0);
+            }
+            > td:nth-child(3) {            
+                text-align: right;
+                //border: 1px solid rgba(0,0,0,0);
+            }
+            > td:nth-child(4) {
+                width: 30px;
+                text-align: right;
+            }
+        }
+    }
 }
 
 .envelopes-table-total {
     @extend .default-card-table-total
-}
-
-.envelopes-table-date {
-    width: 110px;
-}
-
-.envelopes-table-amount {
-    width: 50%;
-}
-
-.envelopes-table-buttons {
-    width: 30px;
-    text-align: right;
 }
 
 .monthlies {
@@ -175,7 +191,31 @@ h1 {
 }
 
 .monthlies-table {
-    @extend .default-card-table
+    @extend .default-card-table;
+    > thead, tbody, tfoot { 
+        > tr {            
+            > td:nth-child(2) {
+                width: 30%;
+                text-align: right;
+            }
+            > td:nth-child(3) {            
+                width: 30%;
+                text-align: right;
+            }
+            > td:nth-child(4) {
+                width: 30px;
+                text-align: right;
+            }
+            > td:nth-child(5) {
+                width: 30px;
+                text-align: right;
+            }
+            > td:nth-child(6) {
+                width: 30px;
+                text-align: right;
+            }
+        }
+    }
 }
 
 .monthlies-table-total {
@@ -187,7 +227,30 @@ h1 {
 }
 
 .goals-table {
-    @extend .default-card-table
+    @extend .default-card-table;
+    > thead, tbody, tfoot {
+        > tr {
+            > td:nth-child(2) {
+                width: 20%;
+                text-align: right;
+            }
+            > td:nth-child(3) {            
+                width: 20%;                
+            }
+            > td:nth-child(4) {
+                width: 20%;
+                text-align: right;
+            }
+            > td:nth-child(5) {
+                width: 20%;
+                text-align: right;
+            }
+            > td:nth-child(6) {
+                width: 30px;
+                text-align: right;
+            }
+        }
+    }
 }
 
 .goals-table-total {

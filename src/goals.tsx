@@ -3,10 +3,11 @@ import { connect, Provider } from 'react-redux'
 import * as ReactModal from "react-modal";
 import * as moment from 'moment';
 import * as Decimal from 'decimal.js';
+import * as uuid from 'node-uuid';
 
 import InplaceInput from './inplaceinput'
 import {MoneyInput} from './inplaceinput'
-import InlineConfirmation from './InlineConfirmation'
+import ButtonWithConfirmation from './ButtonWithConfirmation'
 import * as Model from './model';
 import * as Actions from './actions';
 
@@ -59,9 +60,16 @@ function GoalListItem(props: GoalListItemProps) {
         </td>
         <td>{formatPerMonth(g)}</td>
         <td>{formatProgress(g)}</td>
-        <td><button>Add per month</button></td>
-        <td><button>...</button></td>
-        <td><button>&times;</button></td>        
+        <td><button>Add per month</button></td>        
+        <td>
+            <ButtonWithConfirmation 
+                buttonText="&times;" 
+                confirmMessage={"Delete goal " + g.title + "?"}
+                confirmLabel="Confirm"
+                cancelLabel="Cancel"
+                onConfirm={() => props.onDelete(g.id)}
+            />
+        </td>        
     </tr>
 }
 
@@ -78,6 +86,16 @@ class GoalList extends React.Component<GoalListProps, {}> {
         return <div className="goals">
             <div className="header">Goals</div>                    
             <table className="goals-table">
+                <colgroup>
+                    <col className="goals-table-name"/>
+                    <col className="goals-table-amount"/>
+                    <col className="goals-table-date"/>
+                    <col className="goals-table-assigned"/>
+                    <col className="goals-table-permonth"/>
+                    <col className="goals-table-progress"/>
+                    <col className="goals-table-add-permonth-button"/>
+                    <col className="goals-table-delete-button"/>
+                </colgroup>
                 <thead>
                     <tr>
                         <td>Goal</td>
@@ -103,6 +121,13 @@ class GoalList extends React.Component<GoalListProps, {}> {
                     </tr>
                 </tfoot>
             </table>
+            <button onClick={() => this.props.addGoal({
+                id: uuid.v4(),
+                title: 'Goal',
+                amount: '0.00',
+                goalAmount: '0.00',
+                goalDate: ''
+                })}>+ Goal</button>
         </div>
     }    
 }
