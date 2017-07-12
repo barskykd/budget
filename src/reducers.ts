@@ -49,13 +49,38 @@ export function accounts (state: Model.Account[] | undefined, action: Action): M
     }
 }
 
+function upsert_envelope(state: Model.Envelope[], action: Actions.UpdateEnvelope) {
+    let idx = null;
+    for (let i = 0; i < state.length; ++ i) {
+        if (state[i].date == action.envelope.date) {
+            idx = i;
+            break;
+        }
+    }
+    if (idx != null) {
+        return [...state.slice(0, idx), {
+            ...state[idx],
+            ...action.envelope
+        }, ...state.slice(idx + 1)]
+    } else {
+        return [...state, {
+            date: action.envelope.date || '',
+            amount: action.envelope.amount || '0.00'
+        }];
+    }
+}
+
 function envelopes(state: Model.Envelope[] | undefined, action: Action): Model.Envelope[] {
     if (!state) {
         state = [];
     }
     switch (action.type) {
         case 'DATA_LOADED':
-            return action.data.envelopes
+            return action.data.envelopes;
+        case 'UPDATE_ENVELOPE':
+            return upsert_envelope(state, action);
+        case 'REMOVE_ENVELOPE':
+            return state.filter(x => x.date != action.date);
         default:
             return state;
     }

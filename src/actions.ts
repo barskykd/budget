@@ -15,6 +15,16 @@ export type RemoveAccount = {
     account_id: string
 }
 
+export type UpdateEnvelope = {
+    type: 'UPDATE_ENVELOPE',
+    envelope: Partial<Model.Envelope>
+}
+
+export type RemoveEnvelope = {
+    type: 'REMOVE_ENVELOPE',
+    date: string
+}
+
 export type DataStartLoading = {
     type: "DATA_START_LOADING"    
 }
@@ -32,5 +42,7 @@ export type DataLoaded = {
 export type Action = AddAccount | 
         UpdateAccount | 
         RemoveAccount | 
+        UpdateEnvelope |
+        RemoveEnvelope |
         DataLoaded |
         DataStartLoading

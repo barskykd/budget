@@ -3,7 +3,7 @@ import { connect, Provider } from 'react-redux'
 import * as ReactModal from "react-modal";
 import * as moment from 'moment';
 import * as Decimal from 'decimal.js'
-
+import InplaceInput from './inplaceinput'
 import * as Model from './model';
 import * as Actions from './actions';
 
@@ -23,6 +23,8 @@ function getCurrentMonthEnvelopeDates() {
 
 type EnvelopeItemProps = {
     envelope: Envelope,    
+    onChange: (envelope: Partial<Envelope>) => void,
+    onDelete: () => void
 }
 
 function EnvelopeItem(props: EnvelopeItemProps) {    
@@ -36,22 +38,25 @@ function EnvelopeItem(props: EnvelopeItemProps) {
         daysLeft = 7;
     } else {
         daysLeft = 8 - moment().diff(startOfWeek, 'days')
-    }
+    }    
+    let amountValue = new Decimal(props.envelope.amount).toFixed(2);
+    let onChangeValue = (value:string) => props.onChange({amount: new Decimal(value).toFixed(2)});
     return <tr>
         <td>{moment(props.envelope.date).format('D MMMM')}</td>        
-        <td>{new Decimal(props.envelope.amount).toFixed(2)}</td>
+        <td><InplaceInput value={amountValue} onChange={onChangeValue}/></td>
         <td>{
             (daysLeft && props.envelope.amount) ? new Decimal(props.envelope.amount).div(daysLeft).toFixed(2) : '--'
-            }</td>
-            <td><button>...</button></td>
-            <td> {props.envelope.deletable ? <button>&times;</button> : null}</td>
+            }</td>            
+            <td>{props.envelope.deletable ? <button>&times;</button> : null}</td>
     </tr>
 }
 
 type Envelope = Model.Envelope & {deletable: boolean}
 
 type EnvelopeListProps = {
-    envelopes: Model.Envelope[]
+    envelopes: Model.Envelope[],
+    updateEnvelope: (envelope: Partial<Model.Envelope>) => void,
+    removeEnvelope: (date: string) => void
 }
 
 type EnvByDate = {
@@ -79,13 +84,15 @@ class EnvelopeList extends React.Component<EnvelopeListProps, {}>{
                             <td>Envelope</td>
                             <td>Assigned</td>
                             <td>Daily</td>
-                            <td></td>
-                            <td></td>
+                            <td></td>                            
                         </tr>
                     </thead>
                     <tbody>
                         {envelopes.map(x => 
-                            <EnvelopeItem key={x.date} envelope={x}/>
+                            <EnvelopeItem key={x.date} 
+                                envelope={x} 
+                                onChange={e => this.onEnvelopeChange({...e, date: x.date})}
+                                onDelete={() => this.onEnvelopeDelete(x.date)}/>
                         )}
                     </tbody>
                     <tfoot>
@@ -97,8 +104,23 @@ class EnvelopeList extends React.Component<EnvelopeListProps, {}>{
                 </table>
             </div>
     }
+
+    onEnvelopeChange(envelope: Partial<Envelope>) {
+        this.props.updateEnvelope(envelope);        
+    }
+
+    onEnvelopeDelete(d: string) {
+        this.props.removeEnvelope(d);
+    }
 }
 
 export default connect((state: Model.State) => ({
     envelopes: state.envelopes
-}))(EnvelopeList)
+}), (dispatch: (action:Actions.Action) => void) => ({        
+        updateEnvelope(envelope: Partial<Model.Envelope>) {
+            dispatch({type: 'UPDATE_ENVELOPE', envelope});
+        },
+        removeEnvelope(date: string) {
+            dispatch({type: 'REMOVE_ENVELOPE', date})
+        }
+    }))(EnvelopeList)
