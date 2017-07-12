@@ -4,6 +4,7 @@ import * as ReactModal from "react-modal";
 import * as moment from 'moment';
 import * as Decimal from 'decimal.js'
 import InplaceInput from './inplaceinput'
+import {MoneyInput} from './inplaceinput'
 import InlineConfirmation from './InlineConfirmation'
 import * as Model from './model';
 import * as Actions from './actions';
@@ -41,7 +42,7 @@ class EnvelopeItem extends React.Component<EnvelopeItemProps, {}> {
         } else {
             daysLeft = 8 - moment().diff(startOfWeek, 'days')
         }    
-        let amountValue = new Decimal(this.props.envelope.amount).toFixed(2);
+        let amountValue = this.props.envelope.amount;
        
         let displayAmount = (daysLeft && this.props.envelope.amount) 
                     ? new Decimal(this.props.envelope.amount).div(daysLeft).toFixed(2) 
@@ -52,23 +53,14 @@ class EnvelopeItem extends React.Component<EnvelopeItemProps, {}> {
         }
         return <tr>
             <td>{moment(this.props.envelope.date).format('D MMMM')}</td>        
-            <td><InplaceInput value={amountValue} onChange={v => this.onChangeValue(v)}/></td>
+            <td><MoneyInput value={amountValue} onChange={v => this.onChangeValue(v)}/></td>
             <td>{displayAmount}</td>            
             <td>{deleteButton}</td>
         </tr>
     }    
 
-    onChangeValue(value:string) {
-        try {
-            let amount = new Decimal(value || '0.0').toFixed(2);
-            this.props.onChange({amount});
-        } catch (e) {
-            if (e.message.startsWith('[DecimalError]')) {
-                // all ok. Just invalid number as input.
-            } else {
-                throw e;
-            }            
-        }   
+    onChangeValue(amount:string) {        
+        this.props.onChange({amount});
     }
 }
 

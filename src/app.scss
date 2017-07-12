@@ -6,6 +6,11 @@ body {
 .inplace-input_notediting {
     display: inline-block;
     width: 100%;
+    border: 1px solid rgba(0,0,0,0);
+}
+
+.inplace-input_notediting:hover {
+    border: 1px solid rgba(0,0,0,0.2);
 }
 
             /* The Modal (background) */
