@@ -1,0 +1,152 @@
+body {
+    padding: 4px;
+    font-family: sans-serif;
+}
+
+            /* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.list-item-name {
+    white-space: nowrap;
+    font-weight: bold;
+}
+
+.list-item {
+    border-radius: 10px;
+    border-color: lightgray;
+    border-width: 1px;
+    border-style: solid;
+    padding: 4px;
+    margin: 4px;
+    min-width: 30px;
+    text-align: center;
+}
+
+.item-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    list-style-type: none;
+    padding-left: 0px;
+}
+
+.goals .list-item-balance {
+    display: inline;
+}
+
+h1 {
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.header {
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.total-title {
+    font-size: 13px;
+    font-weight: bold;
+}
+
+#app {
+    max-width: 700px;
+    margin: auto;
+}
+
+.accounts {
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    margin: 8px;
+    padding: 8px;
+}
+
+.accounts-table {
+    width: 100%;
+    border-collapse: collapse; 
+}
+
+.accounts-table > tbody > tr > td {
+    padding: 4px;
+}
+
+tbody tr:nth-child(odd) {
+   background-color: rgba(204, 204, 204, 0.4);
+}
+
+.accounts-table-account {
+    width: 50%;
+}
+
+.accounts-table-buttons {
+    width: 60px;
+}
+
+.accounts-table-total > td {
+    border-top: 1px solid rgba(0,0,0,0.4);
+}
+
+.envelopes {
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    margin: 8px;
+    padding: 8px;
+}
+
+.envelopes-table {
+    width: 100%;
+    border-collapse: collapse; 
+}
+
+.envelopes-table > tbody > tr > td {
+    padding: 4px;
+}
+
+.envelopes-table-total > td {
+    border-top: 1px solid rgba(0,0,0,0.4);
+}
+
+.monthilies {
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    margin: 8px;
+    padding: 8px;
+}
+
+.goals {
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    margin: 8px;
+    padding: 8px;
+}
