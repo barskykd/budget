@@ -29,6 +29,24 @@ type data_v1 = {
     }[]
 }
 
+const DEFAULT_DATA: data_v1 = {"version":1, 
+
+"accounts": [
+	{"id":"1", "title": "Cash", "balance": "2850"},
+	{"id":"2", "title": "Bank account", "balance": "3051.97"}	
+],
+"envelopes": [
+],
+"monthlies": [
+	{"id": "1", "title": "Utility bills", "amount": "2850.00", "defaultAmount": "3000.00"},
+    {"id": "2", "title": "TV subscription", "amount": "7000.00", "defaultAmount": "7000.00"}
+],
+"goals": [	
+    {"id": "1", "title": "X BOX ONE X", "goalAmount": "16000.00", "goalDate":"2018-05-01", "amount": "0.0"},
+    {"id": "2", "title": "New Iphone", "goalAmount": "18000.00", "goalDate":"2018-05-01", "amount": "100.0"}
+]
+}
+
 function format_state_v1(state: Model.State): data_v1
 {
     return {
@@ -81,6 +99,9 @@ export async function save_changes(state: Model.State) {
 
 export async function load_data(): Promise<Actions.DataLoaded | Actions.Logout> {
     const data = await dbx.download_json('/budget.json')    
+    if (data.error_summary && data.error_summary.startsWith('path/not_found')) {
+        return state_change_action_v1(DEFAULT_DATA);
+    }
     if (data.error) {
         return {type: "LOGOUT"}
     }
