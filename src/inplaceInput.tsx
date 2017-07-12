@@ -27,7 +27,7 @@ class InplaceInput extends React.Component<InplaceInputProps, InplaceInputState>
 
     render() {
         if (!this.state.editing) {
-            return <span onClick={e => this.startEditing()}>
+            return <span className="inplace-input_notediting" onClick={e => this.startEditing()}>
                 {this.props.value}
             </span>
         } else {
