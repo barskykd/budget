@@ -7,7 +7,7 @@ import * as Model from './model';
 import * as Actions from './actions';
 import InplaceInput from './inplaceinput';
 import {MoneyInput} from './inplaceinput';
-import InlineConfirmation from './InlineConfirmation'
+import ButtonWithConfirmation from './ButtonWithConfirmation'
 import {isValidDecimal} from './decimal_ext';
 
 type AccountProps = {
@@ -22,18 +22,7 @@ type AccountState = {
 
 class Account extends React.Component<AccountProps, AccountState>
 {
-    render() {
-        let state = this.state || {};
-        const deleteButton = state.isDeleting 
-                ? <InlineConfirmation
-                        message={"Delete account: " + this.props.account.title + "?"}
-                        confirmLabel="Delete"
-                        cancelLabel="Cancel"
-                        onConfirm={()=>this.props.onDelete()}
-                        onCancel={()=>{this.setState({isDeleting: false})}}
-                    />                                                      
-                : <button onClick={()=> this.setState({isDeleting: true})}>&times;</button>
-                                            
+    render() {                              
         return <tr>
             <td><InplaceInput 
                     value={this.props.account.title} 
@@ -43,7 +32,13 @@ class Account extends React.Component<AccountProps, AccountState>
                     value={this.props.account.balance} 
                     onChange={(value)=>this.props.onChange({balance: value})}
                 /></td>            
-            <td>{deleteButton}</td>
+            <td><ButtonWithConfirmation
+                        confirmMessage={"Delete account: " + this.props.account.title + "?"}
+                        confirmLabel="Delete"
+                        cancelLabel="Cancel"
+                        onConfirm={()=>this.props.onDelete()}
+                        buttonText="&times;"
+                    /> </td>
             </tr>
     }
 }

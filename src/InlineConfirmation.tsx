@@ -34,8 +34,10 @@ export default class InlineConfirmation extends React.Component<InlineConfirmati
     render() {
         return <div ref={x=>{this.rootDiv = x}} className="inline-confirmation">
                 <div>{this.props.message}</div>
-                <button ref={x=>{this.confirmButton = x}} onClick={()=>this.onConfirmClick()}>Delete</button>
-                <button onClick={()=>this.onCancelClick()}>Cancel</button>
+                <div className="inline-confirmation-buttons">
+                    <button ref={x=>{this.confirmButton = x}} onClick={()=>this.onConfirmClick()}>Delete</button>
+                    <button onClick={()=>this.onCancelClick()}>Cancel</button>
+                </div>
             </div>;
     }
 

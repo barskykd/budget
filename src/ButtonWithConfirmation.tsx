@@ -15,15 +15,20 @@ type ButtonWithConfirmationState = {
 
 export default class ButtonWithConfirmation extends React.Component<ButtonWithConfirmationProps, ButtonWithConfirmationState> {
     render() {
+        let inlineConfirmation = null;
         if (this.state && this.state.isConfirming) {
-            return <InlineConfirmation
+            inlineConfirmation = <InlineConfirmation
                         message={this.props.confirmMessage}
                         confirmLabel={this.props.confirmLabel}
                         cancelLabel={this.props.cancelLabel}
                         onConfirm={()=>this.props.onConfirm()}
                         onCancel={()=>{this.setState({isConfirming: false})}}
-                    />                                                       
+                    />                                                                
         }
-        return <button onClick={()=> this.setState({isConfirming: true})}>&times;</button>
+        return <div className="buttonwithconfirmation">
+            <button onClick={()=> this.setState({isConfirming: true})}>&times;</button>
+            {inlineConfirmation}                     
+        </div>   
+        
     }
 }

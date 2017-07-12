@@ -3,9 +3,11 @@ import { connect, Provider } from 'react-redux'
 import * as ReactModal from "react-modal";
 import * as moment from 'moment';
 import * as Decimal from 'decimal.js'
+import * as uuid from 'node-uuid';
 
 import InplaceInput from './inplaceinput'
 import {MoneyInput} from './inplaceinput'
+import ButtonWithConfirmation from './ButtonWithConfirmation'
 
 import * as Model from './model'
 import * as Actions from './actions';
@@ -29,7 +31,13 @@ function MonthlyItem(props: MonthlyItemProps) {
         </td>
         <td><button>Assign default</button></td>
         <td><button>Spent</button></td>        
-        <td><button>&times;</button></td>
+        <td><ButtonWithConfirmation
+            buttonText="&times;"
+            confirmMessage={"Delete spending: " + props.monthly.title + "?"}
+            confirmLabel="Delete"
+            cancelLabel="Cancel"
+            onConfirm={() => props.onDelete()}
+        /></td>
     </tr>
 }
 
@@ -71,7 +79,12 @@ function Monthlies (props: MonthliesProps) {
                     <td>{props.monthlies.reduce((pv, cv)=>pv.plus(cv.amount), new Decimal(0)).toFixed(2)}</td></tr>
             </tfoot>
         </table>
-        <button>+ Monthly spending</button>
+        <button onClick={() => props.addMonthly({
+            id: uuid.v4(),
+            title: "Unnamed bill",
+            amount: '0.0',
+            defaultAmount: '0.0'
+            })}>+ Monthly spending</button>
     </div>
 }
 
