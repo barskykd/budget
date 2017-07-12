@@ -69,9 +69,14 @@ export type DataLoaded = {
     }
 }
 
+export type Logout = {
+    type: 'LOGOUT'
+}
+
 export type Action = AddAccount | UpdateAccount | RemoveAccount | 
         UpdateEnvelope | RemoveEnvelope |
         AddGoal | UpdateGoal | RemoveGoal |
         AddMonthly | UpdateMonthly | RemoveMonthly |
         DataLoaded |
-        DataStartLoading
+        DataStartLoading |
+        Logout

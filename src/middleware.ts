@@ -79,8 +79,11 @@ export async function save_changes(state: Model.State) {
     await dbx.upload_json('/budget.json', JSON.stringify(data));    
 }
 
-export async function load_data(): Promise<Actions.DataLoaded> {
+export async function load_data(): Promise<Actions.DataLoaded | Actions.Logout> {
     const data = await dbx.download_json('/budget.json')    
+    if (data.error) {
+        return {type: "LOGOUT"}
+    }
     switch (data.version) {
         case 1:
             return state_change_action_v1(data)
@@ -89,12 +92,18 @@ export async function load_data(): Promise<Actions.DataLoaded> {
     }
 }
 
+export function logOut() {
+    dbx.logOut();
+}
+
 function middleware ({getState, dispatch}: {getState:()=>Model.State, dispatch: any}) {
     return (next: (action: Actions.Action)=>Model.State) => {
         return (action: Actions.Action) => {
             if (action.type == 'DATA_START_LOADING') {
                 load_data().then(a => dispatch(a))
                 return 
+            } else if (action.type == 'LOGOUT') {
+                logOut();                
             }
             const result = next(action);
             if (action.type != 'DATA_LOADED') {

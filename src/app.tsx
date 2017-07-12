@@ -63,58 +63,33 @@ interface AccountItemState {
     editingBalance?: boolean
 }
 
-class InplaceInput extends React.Component<{value: string}, {editing: boolean}> {
-    constructor(props: any) {
-        super(props);
-        this.state = {editing: false};
-    }
-
-    public componentDidUpdate(prevProps : any, prevState:any) {
-        if (!prevState.editing && this.state.editing) {
-            var node = ReactDOM.findDOMNode<HTMLInputElement>(this.refs["editField"]);
-            node.focus();
-            node.setSelectionRange(node.value.length, node.value.length);
-        }     
-    }
-
-    render() {
-        if (!this.state.editing) {
-            return <span 
-                onClick={e => this.setState({editing: true})}>
-                {this.props.value}
-            </span>
-        } else {
-            return <input ref="editField" value={this.props.value} 
-                onBlur={e => this.setState({editing: false})}>
-            </input>
-        }        
-    }
-}
-
 var appDiv = document.getElementById('app'); 
 
 type AppProps = {
     data: Model.State, 
-    loadData: () => void
+    loadData: () => void,
+    logOut: () => void
 }
 
 class App extends React.Component<AppProps, {}> {
     componentWillMount() {
-        this.props.loadData();
+        if (this.props.data.loggedInDropbox) {
+            this.props.loadData();
+        }
     }
 
     render() {
         if (!this.props.data.loggedInDropbox) {
-            return <ReactModal isOpen={true} contentLabel="Log in">
+            return <div className="loginlink">
                 <a id="login_link" href={dbx.auth_url()}>Login to dropbox</a>
-            </ReactModal >
+            </div>
         }
         if (this.props.data.loadingState == "LOADING") {
             return <div className="load-indicator"><img src="spinner.gif"/></div>
         }
         return <div>
                 <div className="page-header">
-                        <h1>Hello!</h1>
+                        <button onClick={()=>this.props.logOut()}>Logout</button>
                     </div>
                     <Accounts/>
                     <Envelopes/>                    
@@ -129,6 +104,9 @@ const AppC = connect(
        (dispatch: (action: Actions.Action) => void) => ({
         loadData() {
             dispatch({type: 'DATA_START_LOADING'})
+        },
+        logOut() {
+            dispatch({type: 'LOGOUT'});
         }
     })
     )(App)

@@ -137,7 +137,12 @@ function goals(state: Model.Goal[] | undefined, action: Action): Model.Goal[] {
 }
 
 export function loggedInDropbox(state: boolean, action: Action): boolean {
-    return state || false;
+    switch (action.type) {
+        case 'LOGOUT':
+            return false;
+        default:
+            return state || false;
+    }    
 }
 
 function loadingState(state: Model.LoadingState, action: Action): Model.LoadingState {
