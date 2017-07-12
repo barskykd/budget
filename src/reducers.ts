@@ -98,6 +98,13 @@ function monthlies(state: Model.Monthly[] | undefined, action: Action): Model.Mo
     }
 }
 
+function update_goal(x: Model.Goal, action: Actions.UpdateGoal): Model.Goal {
+    if (x.id == action.goal.id) {
+        return {...x, ...action.goal}
+    }
+    return x;
+}
+
 function goals(state: Model.Goal[] | undefined, action: Action): Model.Goal[] {
     if (!state) {
         state = [];
@@ -105,6 +112,12 @@ function goals(state: Model.Goal[] | undefined, action: Action): Model.Goal[] {
     switch (action.type) {
         case 'DATA_LOADED':
             return action.data.goals;
+        case 'ADD_GOAL':
+            return [...state, action.goal];
+        case 'UPDATE_GOAL':
+            return state.map(x => update_goal(x, action));            
+        case 'REMOVE_GOAL':
+            return state.filter(x => x.id != action.goal_id);
         default:
             return state;
     }

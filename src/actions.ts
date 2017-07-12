@@ -25,6 +25,21 @@ export type RemoveEnvelope = {
     date: string
 }
 
+export type AddGoal = {
+    type: 'ADD_GOAL',
+    goal: Model.Goal
+}
+
+export type UpdateGoal = {
+    type: 'UPDATE_GOAL',
+    goal: Partial<Model.Goal>
+}
+
+export type RemoveGoal = {
+    type: 'REMOVE_GOAL',
+    goal_id: string
+}
+
 export type DataStartLoading = {
     type: "DATA_START_LOADING"    
 }
@@ -44,5 +59,8 @@ export type Action = AddAccount |
         RemoveAccount | 
         UpdateEnvelope |
         RemoveEnvelope |
+        AddGoal |
+        UpdateGoal |
+        RemoveGoal |
         DataLoaded |
         DataStartLoading

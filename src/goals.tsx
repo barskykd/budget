@@ -4,10 +4,16 @@ import * as ReactModal from "react-modal";
 import * as moment from 'moment';
 import * as Decimal from 'decimal.js';
 
+import InplaceInput from './inplaceinput'
+import {MoneyInput} from './inplaceinput'
+import InlineConfirmation from './InlineConfirmation'
 import * as Model from './model';
+import * as Actions from './actions';
 
 type GoalListItemProps = {
-    goal: Model.Goal
+    goal: Model.Goal,
+    onUpdate: (goal: Partial<Model.Goal>)=>void,
+    onDelete: (goal_id: string)=>void
 }
 
 function formatGoalDate(d: string) {
@@ -18,10 +24,8 @@ function formatGoalDate(d: string) {
     if (!md.isValid()) {
         return ''
     }
-    return md.format('MMM YYYY');
+    return md.format('YYYY-MM');
 }
-
-
 
 function formatPerMonth(g: Model.Goal) {
     let pm = Model.perMonth(g);
@@ -41,10 +45,18 @@ function formatProgress(g: Model.Goal) {
 function GoalListItem(props: GoalListItemProps) {
     let g = props.goal;    
     return <tr>
-        <td>{g.title}</td>
-        <td>{new Decimal(g.goalAmount).toFixed(2)}</td>
-        <td>{formatGoalDate(g.goalDate)}</td>
-        <td>{new Decimal(g.amount).toFixed(2)}</td>
+        <td>
+            <InplaceInput value={g.title} onChange={v=>props.onUpdate({title: v})}/>
+        </td>
+        <td>
+            <MoneyInput value={g.goalAmount} onChange={v=>props.onUpdate({goalAmount: v})}/>            
+        </td>
+        <td>
+            <InplaceInput value={formatGoalDate(g.goalDate)} inputType="month" onChange={(v)=>props.onUpdate({goalDate: v})}/>
+        </td>        
+        <td>
+            <MoneyInput value={g.amount} onChange={v=>props.onUpdate({amount: v})}/>
+        </td>
         <td>{formatPerMonth(g)}</td>
         <td>{formatProgress(g)}</td>
         <td><button>Add per month</button></td>
@@ -55,42 +67,60 @@ function GoalListItem(props: GoalListItemProps) {
 
 type GoalListProps = {
     goals: Model.Goal[],
-    goalsTotals: Model.GoalsTotals
+    goalsTotals: Model.GoalsTotals,
+    addGoal: (goal:Model.Goal) => void,
+    updateGoal: (goal: Partial<Model.Goal>) => void,
+    removeGoal: (goal_id: string) => void
 }
 
-function GoalList(props: GoalListProps) {
-    return <div className="goals">
-        <div className="header">Goals</div>                    
-        <table className="goals-table">
-            <thead>
-                <tr>
-                    <td>Goal</td>
-                    <td>Amount</td>
-                    <td>Date</td>
-                    <td>Assigned</td>
-                    <td>Per month</td>
-                    <td>Progress</td>                
-                </tr>
-            </thead>
-            <tbody>
-                {props.goals.map(x => <GoalListItem key={x.id} goal={x}/>)}
-            </tbody>
-            <tfoot>
-                <tr className="goals-table-total">
-                    <td>Total</td>
-                    <td></td>
-                    <td></td>
-                    <td>{props.goalsTotals.amount.toFixed(2)}</td>
-                    <td>{props.goalsTotals.perMonth.toFixed(2)}</td>
-                </tr>
-            </tfoot>
-        </table>
-    </div>
+class GoalList extends React.Component<GoalListProps, {}> {
+    render() {
+        return <div className="goals">
+            <div className="header">Goals</div>                    
+            <table className="goals-table">
+                <thead>
+                    <tr>
+                        <td>Goal</td>
+                        <td>Amount</td>
+                        <td>Date</td>
+                        <td>Assigned</td>
+                        <td>Per month</td>
+                        <td>Progress</td>                
+                    </tr>
+                </thead>
+                <tbody>
+                    {this.props.goals.map(x => <GoalListItem key={x.id} goal={x} 
+                        onUpdate={g => this.props.updateGoal({...g, id: x.id})} 
+                        onDelete={g_id => this.props.removeGoal(g_id)}/>)}
+                </tbody>
+                <tfoot>
+                    <tr className="goals-table-total">
+                        <td>Total</td>
+                        <td></td>
+                        <td></td>
+                        <td>{this.props.goalsTotals.amount.toFixed(2)}</td>
+                        <td>{this.props.goalsTotals.perMonth.toFixed(2)}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    }    
 }
 
 export default connect(
     (state:Model.State) => ({
         goals: state.goals,
         goalsTotals: Model.getGoalsTotals(state)
-    })
+    }),
+    (dispatch: (action:Actions.Action) => void) => ({
+        addGoal(goal: Model.Goal) {
+            dispatch({type: 'ADD_GOAL', goal});
+        },
+        updateGoal(goal: Partial<Model.Goal>) {
+            dispatch({type: 'UPDATE_GOAL', goal});
+        },
+        removeGoal(goal_id: string) {
+            dispatch({type: 'REMOVE_GOAL', goal_id})
+        }
+    })  
 )(GoalList);
