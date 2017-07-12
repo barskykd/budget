@@ -66,10 +66,11 @@ type AccountsState = {
 class Accounts extends React.Component<AccountsProps, AccountsState>
 {
     render() {                
+        let add_account_button = <button onClick={() => this.addNewAccount()}>+ Account</button>;
         if (!this.props.accounts) {
             return <div>                
                 <div>No accounts.</div>
-                <button>+ Account</button>
+                {add_account_button}
             </div>
         }
         return <div className="accounts">
@@ -95,8 +96,15 @@ class Accounts extends React.Component<AccountsProps, AccountsState>
                     </tr>
                 </tfoot>
             </table>        
-            <button>+ Account</button>
+            {add_account_button}
         </div>
+    }
+
+    addNewAccount() {
+        this.props.addAccount({
+                title: "Account",
+                balance: 0
+        });
     }
 }
 
