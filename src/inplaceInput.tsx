@@ -47,7 +47,9 @@ class InplaceInput extends React.Component<InplaceInputProps, InplaceInputState>
 
     endEditing() {
         this.setState({editing: false});
-        this.props.onChange(this.state.newValue);
+        if (this.props.value != this.state.newValue) {
+            this.props.onChange(this.state.newValue);
+        }        
     }
 
     onKeyUp(e: React.KeyboardEvent<HTMLInputElement>) {
