@@ -47,7 +47,7 @@ class Account extends React.Component<AccountProps, AccountState>
                         }
                     }}
                 /></td>            
-            <td>{deleteButton}</td>
+            <td className="accounts-table-buttons">{deleteButton}</td>
             </tr>
     }
 }

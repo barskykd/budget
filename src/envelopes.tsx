@@ -93,6 +93,12 @@ class EnvelopeList extends React.Component<EnvelopeListProps, {}>{
         return <div className="envelopes">
                 <div className="header">Weekly budgets</div>
                 <table className="envelopes-table">
+                    <colgroup>
+                        <col className="envelopes-table-date"/>
+                        <col className="envelopes-table-amount"/>
+                        <col className="envelopes-table-daily"/>
+                        <col className="envelopes-table-buttons"/>
+                    </colgroup>
                     <thead>
                         <tr>
                             <td>Envelope</td>

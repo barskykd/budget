@@ -141,7 +141,8 @@ h1 {
 }
 
 .accounts-table-buttons {
-    width: 60px;
+    max-width: 80px;
+    text-align: right;
 }
 
 .envelopes {
@@ -154,6 +155,19 @@ h1 {
 
 .envelopes-table-total {
     @extend .default-card-table-total
+}
+
+.envelopes-table-date {
+    width: 110px;
+}
+
+.envelopes-table-amount {
+    width: 50%;
+}
+
+.envelopes-table-buttons {
+    width: 30px;
+    text-align: right;
 }
 
 .monthlies {
