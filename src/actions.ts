@@ -25,6 +25,21 @@ export type RemoveEnvelope = {
     date: string
 }
 
+export type AddMonthly = {
+    type: 'ADD_MONTHLY',
+    monthly: Model.Monthly
+}
+
+export type UpdateMonthly = {
+    type: 'UPDATE_MONTHLY',
+    monthly: Partial<Model.Monthly>
+}
+
+export type RemoveMonthly = {
+    type: 'REMOVE_MONTHLY',
+    monthly_id: string
+}
+
 export type AddGoal = {
     type: 'ADD_GOAL',
     goal: Model.Goal
@@ -54,13 +69,9 @@ export type DataLoaded = {
     }
 }
 
-export type Action = AddAccount | 
-        UpdateAccount | 
-        RemoveAccount | 
-        UpdateEnvelope |
-        RemoveEnvelope |
-        AddGoal |
-        UpdateGoal |
-        RemoveGoal |
+export type Action = AddAccount | UpdateAccount | RemoveAccount | 
+        UpdateEnvelope | RemoveEnvelope |
+        AddGoal | UpdateGoal | RemoveGoal |
+        AddMonthly | UpdateMonthly | RemoveMonthly |
         DataLoaded |
         DataStartLoading

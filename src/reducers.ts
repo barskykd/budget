@@ -86,6 +86,13 @@ function envelopes(state: Model.Envelope[] | undefined, action: Action): Model.E
     }
 }
 
+function update_monthly(state: Model.Monthly, action: Actions.UpdateMonthly) {
+    if (state.id == action.monthly.id) {
+        return {...state, ...action.monthly};
+    }
+    return state;
+}
+
 function monthlies(state: Model.Monthly[] | undefined, action: Action): Model.Monthly[] {
     if (!state) {
         state = [];
@@ -93,6 +100,12 @@ function monthlies(state: Model.Monthly[] | undefined, action: Action): Model.Mo
     switch (action.type) {
         case 'DATA_LOADED':
             return action.data.monthlies;
+        case 'ADD_MONTHLY':
+            return [...state, action.monthly];            
+        case 'UPDATE_MONTHLY':
+            return state.map(x => update_monthly(x, action))
+        case 'REMOVE_MONTHLY':
+            return state.filter(x => x.id != action.monthly_id)
         default:
             return state;
     }

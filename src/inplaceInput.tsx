@@ -95,8 +95,7 @@ export class MoneyInput extends React.Component<InplaceInputProps, {}> {
                     this.props.onChange(newValue)
                 }
             }
-        }
-        console.log('newProps', newProps);
+        }        
         return React.createElement(InplaceInput, newProps);
     }
 }
