@@ -4,6 +4,7 @@ import * as ReactModal from "react-modal";
 import * as moment from 'moment';
 import * as Decimal from 'decimal.js'
 import InplaceInput from './inplaceinput'
+import InlineConfirmation from './InlineConfirmation'
 import * as Model from './model';
 import * as Actions from './actions';
 
@@ -27,29 +28,50 @@ type EnvelopeItemProps = {
     onDelete: () => void
 }
 
-function EnvelopeItem(props: EnvelopeItemProps) {    
-    const envDate = moment(props.envelope.date)
-    const startOfWeek = moment().startOf('week');
-    const endOfWeek = moment().endOf('week');
-    let daysLeft;
-    if (envDate.isBefore(startOfWeek, 'days')) {
-        daysLeft = 0;
-    } else if (envDate.isAfter(endOfWeek, 'days')) {
-        daysLeft = 7;
-    } else {
-        daysLeft = 8 - moment().diff(startOfWeek, 'days')
+class EnvelopeItem extends React.Component<EnvelopeItemProps, {}> {
+    render() {
+        const envDate = moment(this.props.envelope.date)
+        const startOfWeek = moment().startOf('week');
+        const endOfWeek = moment().endOf('week');
+        let daysLeft;
+        if (envDate.isBefore(startOfWeek, 'days')) {
+            daysLeft = 0;
+        } else if (envDate.isAfter(endOfWeek, 'days')) {
+            daysLeft = 7;
+        } else {
+            daysLeft = 8 - moment().diff(startOfWeek, 'days')
+        }    
+        let amountValue = new Decimal(this.props.envelope.amount).toFixed(2);
+       
+        let displayAmount = (daysLeft && this.props.envelope.amount) 
+                    ? new Decimal(this.props.envelope.amount).div(daysLeft).toFixed(2) 
+                    : '--';
+        let deleteButton = null;
+        if (this.props.envelope.deletable) {
+            deleteButton = <button onClick={() => this.props.onDelete()}>&times;</button>;
+        }
+        return <tr>
+            <td>{moment(this.props.envelope.date).format('D MMMM')}</td>        
+            <td><InplaceInput value={amountValue} onChange={v => this.onChangeValue(v)}/></td>
+            <td>{displayAmount}</td>            
+            <td>{deleteButton}</td>
+        </tr>
     }    
-    let amountValue = new Decimal(props.envelope.amount).toFixed(2);
-    let onChangeValue = (value:string) => props.onChange({amount: new Decimal(value).toFixed(2)});
-    return <tr>
-        <td>{moment(props.envelope.date).format('D MMMM')}</td>        
-        <td><InplaceInput value={amountValue} onChange={onChangeValue}/></td>
-        <td>{
-            (daysLeft && props.envelope.amount) ? new Decimal(props.envelope.amount).div(daysLeft).toFixed(2) : '--'
-            }</td>            
-            <td>{props.envelope.deletable ? <button>&times;</button> : null}</td>
-    </tr>
+
+    onChangeValue(value:string) {
+        try {
+            let amount = new Decimal(value || '0.0').toFixed(2);
+            this.props.onChange({amount});
+        } catch (e) {
+            if (e.message.startsWith('[DecimalError]')) {
+                // all ok. Just invalid number as input.
+            } else {
+                throw e;
+            }            
+        }   
+    }
 }
+
 
 type Envelope = Model.Envelope & {deletable: boolean}
 
