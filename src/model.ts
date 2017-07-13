@@ -21,7 +21,12 @@ export type Monthly = {
     id: string,
     title: string,
     amount: string,
-    defaultAmount: string
+    spentIn: string | null
+}
+
+export type MonthliesTotals = {
+    fullAmount: string,
+    remainingAmount: string
 }
 
 export type Goal = {
@@ -37,7 +42,7 @@ export type LoadingState = "LOADED" | "LOADING" | "LOADINGERROR";
 export type State = {
     accounts: Account[],
     envelopes: Envelope[],
-    monthlies: Monthly[],
+    monthlies: Monthly[],    
     goals: Goal[]
     loggedInDropbox: boolean ,
     loadingState: LoadingState
@@ -55,13 +60,22 @@ export const getEnvelopesTotals = createSelector(
 
 export const getMonthliesTotals = createSelector(
     [(state:State)=>state.monthlies],
-    monthlies => monthlies.reduce((pv, cv)=>({
-            amount: pv.amount.plus(cv.amount),
-            defaultAmount: pv.defaultAmount.plus(cv.defaultAmount)
+    monthlies => { 
+        let {fullAmount, remainingAmount} = monthlies.reduce((pv, cv)=>({
+            fullAmount: pv.fullAmount.plus(cv.amount),
+            remainingAmount: pv.remainingAmount.plus(
+                isMonthlyPaidInCurrentMonth(cv) ? 0: cv.amount
+            )
         }), {
-            amount: new Decimal(0),
-            defaultAmount: new Decimal(0)
+            fullAmount: new Decimal(0),
+            remainingAmount: new Decimal(0)
         })
+        let result:MonthliesTotals = {
+            fullAmount: fullAmount.toFixed(2),
+            remainingAmount: remainingAmount.toFixed(2)
+        }
+        return result;
+    }
 )
 
 export function perMonth(g: Goal) {
@@ -96,3 +110,17 @@ export const getGoalsTotals = createSelector(
         })
 )
 
+export function formatYearMonth(d: any) {
+    if (!d) {
+        return ''
+    }
+    let md = moment(d);
+    if (!md.isValid()) {
+        return ''
+    }
+    return md.format('YYYY-MM');
+}
+
+export function isMonthlyPaidInCurrentMonth(m: Monthly) {
+    return formatYearMonth(m.spentIn) == formatYearMonth(new Date())
+}

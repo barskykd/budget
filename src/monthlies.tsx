@@ -19,18 +19,19 @@ type MonthlyItemProps = {
 }
 
 function MonthlyItem(props: MonthlyItemProps) {
+    let onSpentToggle = (e: React.ChangeEvent<HTMLInputElement>) => {
+        let checked: boolean = e.target.checked;
+        let spentIn = checked ? Model.formatYearMonth(new Date()) : null;
+        props.onChange({spentIn})
+    }
     return <tr>
         <td>
             <InplaceInput value={props.monthly.title} onChange={v => props.onChange({title: v})}/>            
-        </td>
+        </td>        
         <td>
-            <MoneyInput value={props.monthly.defaultAmount} onChange={v => props.onChange({defaultAmount: v})}/> 
-        </td>
-        <td>
-            <MoneyInput value={props.monthly.amount} onChange={v => props.onChange({amount: v})}/> 
-        </td>
-        <td><button>Assign default</button></td>
-        <td><button>Spent</button></td>        
+            <MoneyInput value={props.monthly.amount} onChange={v => props.onChange({amount: v})} crossed={Model.isMonthlyPaidInCurrentMonth(props.monthly)}/> 
+        </td>        
+        <td><input className="monthlies-table-spentbox" type="checkbox" checked={Model.isMonthlyPaidInCurrentMonth(props.monthly)} onChange={onSpentToggle} /></td>        
         <td><ButtonWithConfirmation
             buttonText="&times;"
             confirmMessage={"Delete spending: " + props.monthly.title + "?"}
@@ -43,28 +44,27 @@ function MonthlyItem(props: MonthlyItemProps) {
 
 type MonthliesProps = {
     monthlies: Model.Monthly[],
+    monthliesTotals: Model.MonthliesTotals,
     addMonthly: (m: Model.Monthly) => void,
     updateMonthly: (m: Partial<Model.Monthly>) => void,
     removeMonthly: (m_id: string) => void
 }
 
-function Monthlies (props: MonthliesProps) {
+function Monthlies (props: MonthliesProps) {    
     return <div className="monthlies">
         <div className="header">Montly spendings</div>
         <table className="monthlies-table">
             <colgroup>
                 <col className="monthlies-table-name"/>
                 <col className="monthlies-table-amount"/>
-                <col className="monthlies-table-assigned"/>
-                <col className="monthlies-table-assign-default-button"/>
-                <col className="monthlies-table-spend-button"/>            
+                <col className="monthlies-table-paid"/>
                 <col className="monthlies-table-delete-button"/>
             </colgroup>
             <thead>
                 <tr>
                     <td>Monthly spending</td>
                     <td>Amount</td>
-                    <td>Assigned</td>
+                    <td>Paid this month</td>
                 </tr>
             </thead>
             <tbody>
@@ -75,22 +75,23 @@ function Monthlies (props: MonthliesProps) {
             <tfoot>
                 <tr className="monthlies-table-total">
                     <td>Total</td>
-                    <td>{props.monthlies.reduce((pv, cv)=>pv.plus(cv.defaultAmount), new Decimal(0)).toFixed(2)}</td>
-                    <td>{props.monthlies.reduce((pv, cv)=>pv.plus(cv.amount), new Decimal(0)).toFixed(2)}</td></tr>
+                    <td>{props.monthliesTotals.remainingAmount} of {props.monthliesTotals.fullAmount}</td>
+                </tr>
             </tfoot>
         </table>
         <button onClick={() => props.addMonthly({
             id: uuid.v4(),
             title: "Unnamed bill",
             amount: '0.0',
-            defaultAmount: '0.0'
+            spentIn: null
             })}>+ Monthly spending</button>
     </div>
 }
 
 export default connect(
             (state: Model.State)=> ({
-                monthlies: state.monthlies
+                monthlies: state.monthlies,
+                monthliesTotals: Model.getMonthliesTotals(state)
             }),
             (dispatch: (action:Actions.Action) => void) => ({
                 addMonthly(monthly: Model.Monthly) {

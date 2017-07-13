@@ -7,6 +7,7 @@ type InplaceInputProps = {
     onChange: (value:string) => void,
     inputType?: string,
     className?: string
+    crossed?: boolean
 };
 
 type InplaceInputState = {
@@ -33,7 +34,8 @@ class InplaceInput extends React.Component<InplaceInputProps, InplaceInputState>
 
     render() {
         if (!this.state.editing) {
-            let classNames = `inplace-input_notediting ${this.props.className || ''}`;            
+            let crossedClass = this.props.crossed ? 'inplace-input-crossed' : '';
+            let classNames = `inplace-input_notediting ${this.props.className || ''} ${crossedClass}`;            
             return <span className={classNames} onClick={e => this.startEditing()}>
                 {this.props.value}&nbsp;
             </span>

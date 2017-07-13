@@ -18,7 +18,7 @@ type data_v1 = {
         id: string,
         title: string,
         amount: string,
-        defaultAmount: string
+        spentIn: string | null
     }[],
     goals: {
         id: string,
@@ -38,8 +38,8 @@ const DEFAULT_DATA: data_v1 = {"version":1,
 "envelopes": [
 ],
 "monthlies": [
-	{"id": "1", "title": "Utility bills", "amount": "2850.00", "defaultAmount": "3000.00"},
-    {"id": "2", "title": "TV subscription", "amount": "7000.00", "defaultAmount": "7000.00"}
+	{"id": "1", "title": "Utility bills", "amount": "2850.00", "spentIn": null},
+    {"id": "2", "title": "TV subscription", "amount": "7000.00", "spentIn": null}
 ],
 "goals": [	
     {"id": "1", "title": "X BOX ONE X", "goalAmount": "16000.00", "goalDate":"2018-05-01", "amount": "0.0"},
@@ -64,7 +64,7 @@ function format_state_v1(state: Model.State): data_v1
             id: x.id,
             title: x.title,
             amount: x.amount,
-            defaultAmount: x.defaultAmount
+            spentIn: x.spentIn
         })),
         goals: state.goals.map(x => ({
             id: x.id,

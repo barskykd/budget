@@ -16,11 +16,16 @@ body {
     display: inline-block;
     width: 100%;
     border: 1px solid rgba(0,0,0,0);
+
+    &:hover{
+        border: 1px solid rgba(0,0,0,0.2);
+    }
+
+    &.inplace-input-crossed {
+        text-decoration: line-through;
+    }
 }
 
-.inplace-input_notediting:hover {
-    border: 1px solid rgba(0,0,0,0.2);
-}
 
 .inline-confirmation-buttons {
     text-align: right;
@@ -195,12 +200,10 @@ h1 {
             }
             > td:nth-child(2) {
                 width: 50%;
-                text-align: right;
-                //border: 1px solid rgba(0,0,0,0);
+                text-align: right;                
             }
             > td:nth-child(3) {            
-                text-align: right;
-                //border: 1px solid rgba(0,0,0,0);
+                text-align: right;                
             }
             > td:nth-child(4) {
                 width: 30px;
@@ -228,21 +231,16 @@ h1 {
             }
             > td:nth-child(3) {            
                 width: 30%;
-                text-align: right;
-            }
-            > td:nth-child(4) {
-                width: 30px;
-                text-align: right;
-            }
-            > td:nth-child(5) {
-                width: 30px;
-                text-align: right;
-            }
+                text-align: center;
+            }            
             > td:nth-child(6) {
                 width: 30px;
                 text-align: right;
             }
         }
+    }
+    .monthlies-table-spentbox {
+        width: 100%;
     }
 }
 
