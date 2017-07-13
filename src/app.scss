@@ -159,6 +159,26 @@ h1 {
     }
 }
 
+.budget-summary {
+    @extend .default-card;    
+
+    .budget-summary-table {
+        @extend .default-card-table;
+    }
+
+    .budget-summary-balance {
+        @extend .default-card-table-total;
+    }
+
+    .budget-summary-balance-negative {
+        color: red
+    }
+
+    .budget-summary-balance-positive {
+        color: green
+    }
+}
+
 .accounts {
     @extend .default-card    
 }

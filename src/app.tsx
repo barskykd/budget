@@ -7,6 +7,7 @@ import * as Backend from './backend';
 import * as Decimal from 'decimal.js'
 import * as Model from './model';
 import * as Actions from './actions';
+import BudgetSummary from './BudgetSummary';
 import Accounts from './accounts';
 import Envelopes from './envelopes';
 import Monthlies from './monthlies';
@@ -97,6 +98,7 @@ class App extends React.Component<AppProps, {}> {
                 <div className="page-header">
                         <button onClick={()=>this.props.logOut()}>Logout</button>
                     </div>
+                    <BudgetSummary/>
                     <Accounts/>
                     <Envelopes/>                    
                     <Monthlies/>

@@ -58,12 +58,12 @@ export type State = {
 
 export const getAccountTotals = createSelector(
     [(state:State)=>state.accounts],
-    accounts => accounts.reduce((pv, cv)=>pv.plus(cv.balance), new Decimal(0))    
+    accounts => accounts.reduce((pv, cv)=>pv.plus(cv.balance), new Decimal(0)).toFixed(2)  
 )
 
 export const getEnvelopesTotals = createSelector(
     [(state:State)=>state.envelopes],
-    envelopes => envelopes.reduce((pv, cv)=>pv.plus(cv.amount), new Decimal(0))
+    envelopes => envelopes.reduce((pv, cv)=>pv.plus(cv.amount), new Decimal(0)).toFixed(2)
 )
 
 export const getMonthliesTotals = createSelector(
@@ -103,19 +103,36 @@ export function perMonth(g: Goal) {
 }
 
 export type GoalsTotals = {
-    amount: decimal.Decimal,
-    perMonth: decimal.Decimal
+    amount: string,
+    perMonth: string
 }
 
 export const getGoalsTotals = createSelector(
     [(state:State)=>state.goals],
-    goals => goals.reduce((pv, cv)=>({
+    goals => {
+        let totals = goals.reduce((pv, cv)=>({
             amount: pv.amount.plus(cv.amount),
             perMonth: pv.perMonth.plus(perMonth(cv))
         }), {
             amount: new Decimal(0),
             perMonth: new Decimal(0)
         })
+        return {
+            amount: totals.amount.toFixed(2),
+            perMonth: totals.amount.toFixed(2)
+        }
+
+    }
+)
+
+export const getBalance = createSelector(
+    getAccountTotals,
+    getEnvelopesTotals,
+    getMonthliesTotals,
+    getGoalsTotals,
+    (acc, env, month, goal) => {
+        return Decimal(acc).minus(env).minus(month.remainingAmount).minus(goal.amount).toFixed(2);
+    }
 )
 
 export function formatYearMonth(d: any) {

@@ -116,8 +116,8 @@ class GoalList extends React.Component<GoalListProps, {}> {
                         <td>Total</td>
                         <td></td>
                         <td></td>
-                        <td>{this.props.goalsTotals.amount.toFixed(2)}</td>
-                        <td>{this.props.goalsTotals.perMonth.toFixed(2)}</td>
+                        <td>{this.props.goalsTotals.amount}</td>
+                        <td>{this.props.goalsTotals.perMonth}</td>
                     </tr>
                 </tfoot>
             </table>
