@@ -40,7 +40,7 @@ function formatProgress(g: Model.Goal) {
     if (!g.goalAmount) {
         return ''
     }
-    return new Decimal(g.amount).div(new Decimal(g.goalAmount)).times(100).toFixed(0);
+    return new Decimal(g.amount).div(new Decimal(g.goalAmount)).times(100).toFixed(0) + '%';
 }
 
 function GoalListItem(props: GoalListItemProps) {
