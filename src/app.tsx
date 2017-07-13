@@ -95,7 +95,7 @@ class App extends React.Component<AppProps, {}> {
             return <div className="load-indicator"><img src="spinner.gif"/></div>
         }
         return <div>
-                <div className="page-header">
+                    <div className="page-header">
                         <button onClick={()=>this.props.logOut()}>Logout</button>
                     </div>
                     <BudgetSummary/>
@@ -103,7 +103,7 @@ class App extends React.Component<AppProps, {}> {
                     <Envelopes/>                    
                     <Monthlies/>
                     <Goals/>
-                    {this.unsavedChangesCounter()}
+                    {/*this.unsavedChangesCounter()*/}
                 </div>
         }
 
