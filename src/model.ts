@@ -39,13 +39,21 @@ export type Goal = {
 
 export type LoadingState = "LOADED" | "LOADING" | "LOADINGERROR";
 
+export type StoredData = {
+        accounts: Account[],
+        envelopes: Envelope[],
+        monthlies: Monthly[],
+        goals: Goal[]
+    }
+
 export type State = {
     accounts: Account[],
     envelopes: Envelope[],
     monthlies: Monthly[],    
     goals: Goal[]
     loggedInDropbox: boolean ,
-    loadingState: LoadingState
+    loadingState: LoadingState,
+    unsavedChanges: number
 }
 
 export const getAccountTotals = createSelector(

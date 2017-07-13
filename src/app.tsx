@@ -1,9 +1,9 @@
 import "babel-polyfill";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import * as ReactModal from "react-modal";
 
 import * as dbx from './dropbox';
+import * as Backend from './backend';
 import * as Decimal from 'decimal.js'
 import * as Model from './model';
 import * as Actions from './actions';
@@ -11,10 +11,9 @@ import Accounts from './accounts';
 import Envelopes from './envelopes';
 import Monthlies from './monthlies';
 import Goals from './goals';
-import MiddleWare from './middleware'
 
 import { connect, Provider } from 'react-redux'
-import { createStore, applyMiddleware} from 'redux'
+import { createStore, compose} from 'redux'
 
 declare var window: any;
 declare var Redux: any;
@@ -27,8 +26,9 @@ let redux_store = createStore<Model.State>(Reducers, {
     monthlies: [],
     goals: [],
     loggedInDropbox: dbx.loggedIn(),
-    loadingState: "LOADING"
-}, applyMiddleware(MiddleWare))
+    loadingState: "LOADING",
+    unsavedChanges: 0
+})
 
 interface WithId {
     id: string
@@ -68,7 +68,9 @@ var appDiv = document.getElementById('app');
 type AppProps = {
     data: Model.State, 
     loadData: () => void,
-    logOut: () => void
+    logOut: () => void, 
+    dataLoaded: () => void,
+    dataSaved: (changeCount: number) => void
 }
 
 class App extends React.Component<AppProps, {}> {
@@ -76,6 +78,10 @@ class App extends React.Component<AppProps, {}> {
         if (this.props.data.loggedInDropbox) {
             this.props.loadData();
         }
+    }
+
+    unsavedChangesCounter() {
+        return <div>{this.props.data.unsavedChanges}</div>
     }
 
     render() {
@@ -95,18 +101,45 @@ class App extends React.Component<AppProps, {}> {
                     <Envelopes/>                    
                     <Monthlies/>
                     <Goals/>
+                    {this.unsavedChangesCounter()}
                 </div>
         }
+
+    componentDidUpdate() {
+        let unsavedChanges = this.props.data.unsavedChanges;
+        if (unsavedChanges > 0) {
+            Backend.save_changes(this.props.data)
+            .then(() => this.props.dataSaved(unsavedChanges));            
+        }
+    }
+}
+
+type TDispatch = (action: Actions.Action) => void;
+
+function logOut(dispatch: TDispatch) {
+    dbx.logOut();
+    dispatch(Actions.logout());
 }
 
 const AppC = connect(
         (state: Model.State) => ({data: state}), 
-       (dispatch: (action: Actions.Action) => void) => ({
+        (dispatch: TDispatch) => ({
         loadData() {
-            dispatch({type: 'DATA_START_LOADING'})
+            dispatch({type: 'DATA_START_LOADING'});
+            Backend.loadData({
+                loaded: (d) => dispatch(Actions.dataLoaded(d)),
+                loginError: () => logOut(dispatch),
+                parseError: (e: Error) => {console.error(e);}
+            });
         },
         logOut() {
-            dispatch({type: 'LOGOUT'});
+            logOut(dispatch);
+        }, 
+        dataLoaded(data: Model.StoredData) {
+            dispatch(Actions.dataLoaded(data));
+        },
+        dataSaved(changeCount: number) {
+            dispatch(Actions.dataSaved(changeCount));
         }
     })
     )(App)

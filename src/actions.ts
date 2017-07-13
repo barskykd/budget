@@ -61,16 +61,36 @@ export type DataStartLoading = {
 
 export type DataLoaded = {
     type: 'DATA_LOADED',
-    data: {
-        accounts: Model.Account[],
-        envelopes: Model.Envelope[],
-        monthlies: Model.Monthly[],
-        goals: Model.Goal[]
+    data: Model.StoredData
+}
+
+export function dataLoaded(data: Model.StoredData): DataLoaded {
+    return {
+        type: "DATA_LOADED",
+        data
     }
 }
 
 export type Logout = {
     type: 'LOGOUT'
+}
+
+export function logout():Logout {
+    return {
+        type: 'LOGOUT'
+    }
+}
+
+export type DataSaved = {
+    type: 'DATA_SAVED',
+    changesCount: number
+}
+
+export function dataSaved(changesCount: number): DataSaved {
+    return {
+        type: 'DATA_SAVED',
+        changesCount
+    }
 }
 
 export type Action = AddAccount | UpdateAccount | RemoveAccount | 
@@ -79,4 +99,7 @@ export type Action = AddAccount | UpdateAccount | RemoveAccount |
         AddMonthly | UpdateMonthly | RemoveMonthly |
         DataLoaded |
         DataStartLoading |
+        DataSaved |
         Logout
+
+

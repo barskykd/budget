@@ -41,7 +41,7 @@ export async function upload_json(path: string, data: any) {
         "path": path,
         "mode": {".tag": "overwrite"},
         "autorename": true,
-        "mute": false
+        "mute": true
     }))
 
     let res = await fetch('https://content.dropboxapi.com/2/files/upload', {

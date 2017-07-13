@@ -157,6 +157,36 @@ function loadingState(state: Model.LoadingState, action: Action): Model.LoadingS
     }
 }
 
+function unsavedChanges(state: number, action: Action): number {
+    if (state === undefined) {
+        state = 0;
+    }
+    switch (action.type) {
+        case "ADD_ACCOUNT":
+        case "UPDATE_ACCOUNT":
+        case "REMOVE_ACCOUNT":
+        case "UPDATE_ENVELOPE":
+        case "REMOVE_ENVELOPE":
+        case "ADD_MONTHLY":
+        case "UPDATE_MONTHLY":
+        case "REMOVE_MONTHLY":
+        case "ADD_GOAL":
+        case "UPDATE_GOAL":
+        case "REMOVE_GOAL":
+            return state + 1;
+        case "DATA_LOADED":
+        case "LOGOUT":
+            return 0;
+        case "DATA_SAVED":
+            if (state == action.changesCount) {
+                return 0;
+            }
+            return state;
+        default:
+            return state;
+    }
+}
+
 export default combineReducers<Model.State>({
         accounts,
         loggedInDropbox,
@@ -164,4 +194,5 @@ export default combineReducers<Model.State>({
         monthlies,
         goals,
         loadingState,
+        unsavedChanges
     });
