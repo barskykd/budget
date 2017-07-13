@@ -101,7 +101,7 @@ class EnvelopeList extends React.Component<EnvelopeListProps, {}>{
                     </colgroup>
                     <thead>
                         <tr>
-                            <td>Envelope</td>
+                            <td>Week</td>
                             <td>Assigned</td>
                             <td>Daily</td>
                             <td></td>                            
